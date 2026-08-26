@@ -577,4 +577,20 @@ public theorem multipleFiberLift_mk {B : Type} [AddCommGroup B]
         (Submodule.Quotient.mk (Submodule.Quotient.mk x, k)) = φ x + k • b := by
   simp [multipleFiberLift, LinearMap.toSpanSingleton]
 
+/-- Two maps out of the presentation that agree on the lattice classes and on the meridian are
+equal.  With `multipleFiberLift` this is the full universal property. -/
+public theorem multipleFiberLift_unique {B : Type} [AddCommGroup B]
+    (D : Lattice →ₗ[ℤ] Lattice) (v : Lattice) (m : ℤ)
+    (f g : MultipleFiberHOnePresentation D v m →ₗ[ℤ] B)
+    (h : ∀ (x : Lattice) (k : ℤ),
+      f (Submodule.Quotient.mk (Submodule.Quotient.mk x, k)) =
+        g (Submodule.Quotient.mk (Submodule.Quotient.mk x, k))) :
+    f = g := by
+  refine LinearMap.ext fun q => ?_
+  induction q using Submodule.Quotient.induction_on with
+  | H p =>
+    obtain ⟨y, k⟩ := p
+    induction y using Submodule.Quotient.induction_on with
+    | H x => exact h x k
+
 end SphereSixComplex.Topology.PaperLemmaSevenThirteenAlgebra
